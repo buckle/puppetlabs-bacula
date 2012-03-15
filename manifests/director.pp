@@ -72,7 +72,7 @@ class bacula::director(
 
   # In order to work with Puppet 2.6 where create_resources isn't in core,
   # we just skip the top-level stuff for now.
-  if versioncmp($puppetversion, 2.7.0) >= 0 {
+  if versioncmp($puppetversion, '2.7.0') >= 0 {
     generate_clients($clients)
   }
   else {
