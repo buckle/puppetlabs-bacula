@@ -1,13 +1,13 @@
 # Class:: bacula::config
-# 
+#
 # This class determines default values for parameters needed
-# to configure the bacula class.  It looks for variables in 
+# to configure the bacula class.  It looks for variables in
 # top scope (probably from an ENC such as Dashboard).
 # If the variable doesn't exist in top scope, fall back to
-# a hard coded default. 
-# 
+# a hard coded default.
+#
 # Some of the variables in this class need to be booleans.
-# However, if we get the value from top scope, it could 
+# However, if we get the value from top scope, it could
 # be a string since Dashboard can't express booleans.
 # So we need to see if it's a string and attempt to
 # convert it to a boolean
@@ -17,6 +17,16 @@
 # class { 'bacula::config': }
 class bacula::config {
 
+  case $operatingsystem {
+    redhat,centos: {
+      $sqlite_storage_package  = 'bacula-storage-sqlite'
+      $sqlite_director_package = 'bacula-director-sqlite'
+    }
+    debian,ubuntu: {
+      $sqlite_storage_package  = 'bacula-sd-sqlite3'
+      $sqlite_director_package = 'bacula-director-sqlite3'
+    }
+  }
   #If we have a top scope variable defined, use it.
   #Fall back to a hardcoded value.
   #
@@ -45,7 +55,7 @@ class bacula::config {
 
 
   $is_director = $::bacula_is_director ? {
-    undef   => false, 
+    undef   => false,
     default => $::bacula_is_director,
   }
   if is_string($is_director) {
@@ -160,12 +170,12 @@ class bacula::config {
   }
 
   $director_sqlite_package = $::bacula_director_sqlite_package ? {
-    undef   => 'bacula-director-sqlite3',
+    undef   => $sqlite_director_package,
     default => $::bacula_director_sqlite_package,
   }
 
   $storage_sqlite_package = $::bacula_storage_sqlite_package ? {
-    undef   => 'bacula-sd-sqlite3',
+    undef   => $sqlite_storage_package,
     default => $::bacula_storage_sqlite_package,
   }
 
@@ -188,7 +198,7 @@ class bacula::config {
     undef   => '',
     default => $::bacula_db_user,
   }
- 
+
   $db_port = $::bacula_db_port ? {
     undef   => '3306',
     default => $::bacula_db_user,
