@@ -133,8 +133,8 @@ class bacula::director(
   service { 'bacula-director':
     enable     => true,
     name       => $operatingsystem ? {
-      /(centos|redhat)/ => 'bacula-dir',
-      /(debian|ubuntu)/ => 'bacula-director',
+      /(CentOS|RedHat)/ => 'bacula-dir',
+      /(Debian|Ubuntu)/ => 'bacula-director',
     },
     ensure     => running,
     hasstatus  => true,
