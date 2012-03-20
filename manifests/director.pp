@@ -132,6 +132,10 @@ class bacula::director(
   # Register the Service so we can manage it through Puppet
   service { 'bacula-director':
     enable     => true,
+    name       => $operatingsystem ? {
+      /(centos|redhat)/ => 'bacula-dir',
+      /(debian|ubuntu)/ => 'bacula-director',
+    },
     ensure     => running,
     hasstatus  => true,
     hasrestart => true,
