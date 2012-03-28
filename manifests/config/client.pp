@@ -1,12 +1,11 @@
 define bacula::config::client (
-   $fileset  = 'Basic:noHome',
-   $schedule = 'WeeklyCycle'
+   $fileset         = 'Basic:noHome',
+   $client_schedule = 'WeeklyCycle'
  ) {
 
  if ! is_domain_name($name) {
    fail "Name for client ${name} must be a fully qualified domain name"
  }
- $client_schedule = $schedule
 
  $name_array = split($name, '[.]')
  $hostname   = $name_array[0]
