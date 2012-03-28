@@ -20,10 +20,12 @@ class bacula::config {
   case $operatingsystem {
     redhat,centos: {
       $sqlite_storage_package  = 'bacula-storage-sqlite'
+      $mysql_storage_package   = 'bacula-storage-mysql'
       $sqlite_director_package = 'bacula-director-sqlite'
     }
     debian,ubuntu: {
       $sqlite_storage_package  = 'bacula-sd-sqlite3'
+      $mysql_storage_package   = 'bacula-sd-mysql'
       $sqlite_director_package = 'bacula-director-sqlite3'
     }
   }
@@ -165,7 +167,7 @@ class bacula::config {
   }
 
   $storage_mysql_package  = $::bacula_storage_mysql_package ? {
-    undef   => 'bacula-sd-mysql',
+    undef   => $mysql_storage_package,
     default => $::bacula_storage_mysql_package,
   }
 
