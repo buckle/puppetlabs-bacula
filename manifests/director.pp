@@ -76,7 +76,8 @@ class bacula::director(
     generate_clients($clients)
   }
   else {
-    create_resources('bacula::config::client', $clients)
+    $hash = {'bacula::config::client' => $clients }
+    create_resources('class', $hash)
   }
 
   # Only support mysql or sqlite.
