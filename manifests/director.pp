@@ -76,8 +76,8 @@ class bacula::director(
     generate_clients($clients)
   }
   else {
-    $hash = {'client' => $clients }
-    create_resources('bacula::config::client', $hash)
+#    $hash = {'client' => $clients }
+#    create_resources('bacula::config::client', $hash)
     #TODO This needs to be a collected virtual resource
   }
 
