@@ -39,8 +39,8 @@ class bacula::common(
   if $manage_db_tables {
     exec { 'make_db_tables':
       command     => $operatingsystem ? {
-        'Ubuntu','Debian' => "/usr/lib/bacula/make_bacula_tables ${db_parameters}",
-        'RedHat','CentOS' => "/usr/libexec/bacula/make_mysql_tables ${db_parameters}",
+        /(Ubuntu|Debian)/ => "/usr/lib/bacula/make_bacula_tables ${db_parameters}",
+        /(RedHat|CentOS)/ => "/usr/libexec/bacula/make_mysql_tables ${db_parameters}",
       }
       refreshonly => true,
     }
