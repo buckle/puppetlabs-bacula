@@ -36,14 +36,12 @@ class bacula::common(
     'mysql'  => "--host=${db_host} --user=${db_user} --password=${db_password} --port=${db_port} --database=${db_database}",
   }
 
-  if $manage_db_tables {
-    exec { 'make_db_tables':
-      command     => $operatingsystem ? {
-        /(Ubuntu|Debian)/ => "/usr/lib/bacula/make_bacula_tables ${db_parameters}",
-        /(RedHat|CentOS)/ => "/usr/libexec/bacula/make_mysql_tables ${db_parameters}",
-      },
-      refreshonly => true,
-    }
+  exec { 'make_db_tables':
+    command     => $operatingsystem ? {
+      /(Ubuntu|Debian)/ => "/usr/lib/bacula/make_bacula_tables ${db_parameters}",
+      /(RedHat|CentOS)/ => "/usr/libexec/bacula/make_mysql_tables ${db_parameters}",
+    },
+    refreshonly => true,
   }
 
   if $manage_db {
