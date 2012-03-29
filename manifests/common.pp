@@ -1,6 +1,6 @@
 # Class: bacula::common
-# 
-# This class enforces common resources needed by all 
+#
+# This class enforces common resources needed by all
 # bacula components
 #
 # Actions:
@@ -22,7 +22,7 @@ class bacula::common(
   ) {
 
   if $packages {
-    package { $packages: 
+    package { $packages:
       ensure => installed,
       notify => $manage_db_tables ? {
         true  => Exec['make_db_tables'],
@@ -38,7 +38,10 @@ class bacula::common(
 
   if $manage_db_tables {
     exec { 'make_db_tables':
-      command     => "/usr/lib/bacula/make_bacula_tables ${db_parameters}",
+      command     => $operatingsystem ? {
+        'Ubuntu','Debian' => "/usr/lib/bacula/make_bacula_tables ${db_parameters}",
+        'RedHat','CentOS' => "/usr/libexec/bacula/make_mysql_tables ${db_parameters}",
+      }
       refreshonly => true,
     }
   }
@@ -63,7 +66,7 @@ class bacula::common(
 
       'sqlite': {
         sqlite::db { $db_database:
-          location => "/var/lib/bacula/${db_database}.db", 
+          location => "/var/lib/bacula/${db_database}.db",
           owner    => 'bacula',
           group    => 'bacula',
           ensure   => present,
