@@ -56,20 +56,30 @@ class bacula::director(
     $clients = {}
   ) {
 
-  
+
   $storage_name_array = split($storage_server, '[.]')
   $director_name_array = split($server, '[.]')
   $storage_name = $storage_name_array[0]
   $director_name = $director_name_array[0]
 
-  
+
   # This function takes each client specified in $clients
   # and generates a bacula::client resource for each
   #
   # It also searches top scope for variables in the style
   # $bacula_client_mynode with values in format
   # fileset=Basic:noHome,schedule=Hourly
-  generate_clients($clients)
+
+  # In order to work with Puppet 2.6 where create_resources isn't in core,
+  # we just skip the top-level stuff for now.
+  if versioncmp($puppetversion, '2.7.0') >= 0 {
+    generate_clients($clients)
+  }
+  else {
+#    $hash = {'client' => $clients }
+#    create_resources('bacula::config::client', $hash)
+    #TODO This needs to be a collected virtual resource
+  }
 
   # Only support mysql or sqlite.
   # The given backend is validated in the bacula::config::validate class
@@ -78,7 +88,7 @@ class bacula::director(
     'mysql'  => $mysql_package,
     'sqlite' => $sqlite_package,
   }
-  
+
   if $director_package {
     package { $director_package:
       ensure => installed,
@@ -124,6 +134,10 @@ class bacula::director(
   # Register the Service so we can manage it through Puppet
   service { 'bacula-director':
     enable     => true,
+    name       => $operatingsystem ? {
+      /(CentOS|RedHat)/ => 'bacula-dir',
+      /(Debian|Ubuntu)/ => 'bacula-director',
+    },
     ensure     => running,
     hasstatus  => true,
     hasrestart => true,

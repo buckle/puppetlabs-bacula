@@ -1,6 +1,6 @@
 define bacula::config::client (
-   $fileset  = 'Basic:noHome',
-   $schedule = 'WeeklyCycle'
+   $fileset         = 'Basic:noHome',
+   $client_schedule = 'WeeklyCycle'
  ) {
 
  if ! is_domain_name($name) {
